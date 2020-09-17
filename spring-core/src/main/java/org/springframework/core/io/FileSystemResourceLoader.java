@@ -17,6 +17,8 @@
 package org.springframework.core.io;
 
 /**
+ * 创建 FileSystemResource 用该 ResourceLoader
+ *
  * {@link ResourceLoader} implementation that resolves plain paths as
  * file system resources rather than as class path resources
  * (the latter is {@link DefaultResourceLoader}'s default strategy).
@@ -70,6 +72,10 @@ public class FileSystemResourceLoader extends DefaultResourceLoader {
 			super(path);
 		}
 
+		/**
+		 * 实现接口 ContextResource 的 getPathWithinContext() 方法
+		 * FileSystemResource 中，没有该方法
+		 */
 		@Override
 		public String getPathWithinContext() {
 			return getPath();

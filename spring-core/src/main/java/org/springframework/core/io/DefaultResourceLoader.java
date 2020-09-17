@@ -153,7 +153,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 	public Resource getResource(String location) {
 		Assert.notNull(location, "Location must not be null");
 
-		// 首先，通过 ProtocolResolver 来加载资源
+		// 首先，通过 ProtocolResolver 来加载资源，用户自定义
 		for (ProtocolResolver protocolResolver : this.protocolResolvers) {
 			Resource resource = protocolResolver.resolve(location, this);
 			if (resource != null) {
@@ -171,9 +171,12 @@ public class DefaultResourceLoader implements ResourceLoader {
 			try {
 				// Try to parse the location as a URL...
 				URL url = new URL(location);
+				// 根据 URL 前缀判断，文件 URL 的前缀：file、vfsfile、vfs
 				return (ResourceUtils.isFileURL(url) ? new FileUrlResource(url) : new UrlResource(url));
 			} catch (MalformedURLException ex) {
 			    // 最后，返回 ClassPathContextResource 类型的资源
+				// 绝对路径，如：D:/Users/chenming673/Documents/spark.txt，会进入这里
+				// 如果想返回 FileSystemResource，可以用 FileSystemResource 的子类 FileSystemResource 来加载 location
 				// No URL -> resolve as resource path.
 				return getResourceByPath(location);
 			}

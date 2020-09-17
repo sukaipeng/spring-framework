@@ -261,13 +261,14 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		Assert.notNull(locationPattern, "Location pattern must not be null");
         // 以 "classpath*:" 开头
 		if (locationPattern.startsWith(CLASSPATH_ALL_URL_PREFIX)) {
-            // 路径包含通配符
+            // 路径包含通配符（* 或 ?）
 			// a class path resource (multiple resources for same name possible)
 			if (getPathMatcher().isPattern(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()))) {
 				// a class path resource pattern
 				return findPathMatchingResources(locationPattern);
             // 路径不包含通配符
 			} else {
+				// 利用 ClassLoader 加载 classes 路径下和所有 jar 包中的所有相匹配的资源
 				// all class path resources with the given name
 				return findAllClassPathResources(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()));
 			}
@@ -292,7 +293,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	/**
 	 * Find all class location resources with the given location via the ClassLoader.
 	 * Delegates to {@link #doFindAllClassPathResources(String)}.
-	 * @param location the absolute path within the classpath
+	 * @param location the absolute path within the classpath 前缀“classpath*:”已被剔除
 	 * @return the result as Resource array
 	 * @throws IOException in case of I/O errors
 	 * @see java.lang.ClassLoader#getResources
@@ -543,6 +544,10 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		}
 		// 截取根目录
 		return location.substring(0, rootDirEnd);
+
+		// 源路径 -> 根路径
+		// classpath*:test/cc*/spring-*.xml -> classpath*:test/
+		// classpath*:test/aa/spring-*.xml -> classpath*:test/aa/
 	}
 
 	/**
