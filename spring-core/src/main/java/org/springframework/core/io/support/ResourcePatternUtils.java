@@ -43,6 +43,9 @@ public abstract class ResourcePatternUtils {
 	 * @see java.net.URL
 	 */
 	public static boolean isUrl(@Nullable String resourceLocation) {
+		// classpath*:
+		// classpath:
+		// 可以构建成 java.net.URL
 		return (resourceLocation != null &&
 				(resourceLocation.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX) ||
 						ResourceUtils.isUrl(resourceLocation)));

@@ -138,7 +138,7 @@ public class XmlValidationModeDetector {
 		int openTagIndex = content.indexOf('<');
 		return (openTagIndex > -1 // < 存在
                 && (content.length() > openTagIndex + 1) // < 后面还有内容
-                && Character.isLetter(content.charAt(openTagIndex + 1))); // < 后面的内容是字幕
+                && Character.isLetter(content.charAt(openTagIndex + 1))); // < 后面的内容是字母
 	}
 
 	/**
